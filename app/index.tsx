@@ -1,22 +1,23 @@
-import { ThemedText } from "@/components/ThemedText";
-import { useAuthentication } from "@/hooks/useAuthentication";
-import { router } from "expo-router";
-import { Button, View } from "react-native";
+import { router } from 'expo-router'
+import { Button, View } from 'react-native'
+
+import { ThemedText } from '@/components/ThemedText'
+import { useAuthentication } from '@/hooks/useAuthentication'
 
 export default function LoginScreen() {
   async function login() {
     useAuthentication().then(() => {
-      router.navigate("/(tabs)");
-    });
+      router.navigate('/(tabs)')
+    })
   }
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ flex: 1, justifyContent: "center" }}>
+      <View style={{ flex: 1, justifyContent: 'center' }}>
         <ThemedText
           style={{
             fontSize: 24,
-            textAlign: "center",
+            textAlign: 'center',
             marginHorizontal: 32,
             marginTop: 24,
           }}
@@ -32,5 +33,5 @@ export default function LoginScreen() {
         <Button title="Login" onPress={login} />
       </View>
     </View>
-  );
+  )
 }
