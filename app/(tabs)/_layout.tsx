@@ -1,15 +1,37 @@
-import { Tabs } from 'expo-router'
+import { BlurView } from 'expo-blur'
+import { Redirect, Tabs } from 'expo-router'
 import React from 'react'
-import { Platform } from 'react-native'
+import {
+  ActivityIndicator,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native'
 
 import { HapticTab } from '@/components/HapticTab'
 import { IconSymbol } from '@/components/ui/IconSymbol'
 import TabBarBackground from '@/components/ui/TabBarBackground'
 import { Colors } from '@/constants/Colors'
+import { useAuth } from '@/contexts/auth'
 import { useColorScheme } from '@/hooks/useColorScheme'
 
 export default function TabLayout() {
   const colorScheme = useColorScheme()
+
+  const { user, isLoading } = useAuth()
+
+  if (isLoading) {
+    return (
+      <View className="flex-1 items-center justify-center">
+        <ActivityIndicator />
+      </View>
+    )
+  }
+
+  if (!user) {
+    return <Redirect href="/login" />
+  }
 
   return (
     <Tabs
@@ -17,7 +39,13 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
         tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
+        tabBarBackground: () => (
+          <BlurView
+            tint="light"
+            intensity={50}
+            style={StyleSheet.absoluteFill}
+          />
+        ),
         tabBarStyle: Platform.select({
           ios: {
             // Use a transparent background on iOS to show the blur effect
