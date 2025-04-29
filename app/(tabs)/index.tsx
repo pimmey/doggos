@@ -1,13 +1,20 @@
+import { useState } from 'react'
 import {
   ActivityIndicator,
+  Button,
   FlatList,
   SafeAreaView,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native'
 
-import { useDogBreeds } from '@/data/dog-breeds'
+import {
+  EmptyComponent,
+  Footer,
+  ListItem,
+} from '@/components/breed-list'
+import { useFavorites } from '@/contexts/favorites'
+import { useDogBreedsInfiniteQuery } from '@/data/dog-breeds'
 
 export default function HomeScreen() {
   const {
@@ -18,9 +25,16 @@ export default function HomeScreen() {
     hasNextPage,
     isFetchingNextPage,
     refetch,
-  } = useDogBreeds()
+  } = useDogBreedsInfiniteQuery()
 
   const flatData = data?.pages.flat() ?? []
+
+  const { isFavorite } = useFavorites()
+  const [showOnlyFavorites, setShowOnlyFavorites] = useState(false)
+
+  const filteredData = showOnlyFavorites
+    ? flatData.filter(breed => isFavorite(breed.id.toString()))
+    : flatData
 
   if (isError) {
     return (
@@ -39,50 +53,31 @@ export default function HomeScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 justify-center">
-      <View className="p-4">
+    <SafeAreaView className="flex-1 justify-center bg-white">
+      <View className="flex-row items-center justify-between p-4">
         <Text className="text-4xl font-bold">Dog breeds 🐕</Text>
+        <Button
+          title={showOnlyFavorites ? 'All' : 'Favorites'}
+          onPress={() => setShowOnlyFavorites(prev => !prev)}
+        />
       </View>
       <FlatList
-        data={flatData}
+        data={filteredData}
         keyExtractor={item => item.id.toString()}
-        onEndReached={() => {
-          if (hasNextPage && !isFetchingNextPage) {
-            fetchNextPage()
-          }
-        }}
-        contentContainerStyle={{
-          paddingBottom: 16,
-          flexGrow: 1,
-        }}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={
-          isFetchingNextPage ? (
-            <View className="p-4">
-              <ActivityIndicator size="small" />
-            </View>
-          ) : null
+        contentContainerStyle={{ flexGrow: 1 }}
+        onEndReached={
+          showOnlyFavorites
+            ? undefined
+            : () => {
+                if (hasNextPage && !isFetchingNextPage) {
+                  fetchNextPage()
+                }
+              }
         }
-        ListEmptyComponent={() => (
-          <View className="flex-1 items-center justify-center">
-            <Text className="text-2xl text-gray-400">
-              No breeds found 🐶
-            </Text>
-          </View>
-        )}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            className="border-b border-b-gray-300 p-4"
-            onPress={() => {
-              // TODO: Navigate to Details screen
-            }}
-          >
-            <Text className="text-xl">{item.name}</Text>
-            <Text className="text-gray-500">
-              {item.breed_group || 'Unknown'}
-            </Text>
-          </TouchableOpacity>
-        )}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={isFetchingNextPage ? <Footer /> : null}
+        ListEmptyComponent={<EmptyComponent />}
+        renderItem={({ item }) => <ListItem breed={item} />}
         refreshing={isFetchingNextPage}
         onRefresh={() => refetch()}
       />
