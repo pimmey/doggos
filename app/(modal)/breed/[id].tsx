@@ -25,8 +25,8 @@ export default function BreedDetailScreen() {
         />
       )}
       <View className="gap-4 p-4">
-        <View className="flex-row justify-between">
-          <View>
+        <View className="flex-row justify-between gap-4">
+          <View className="flex-1">
             <Text className="text-4xl font-bold">{breed.name}</Text>
             {breed.breed_group && (
               <Text className="text-lg text-gray-600">

@@ -1,30 +1,40 @@
 import { router } from 'expo-router'
+import { memo, useCallback } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 
 import { Favorite } from '@/components/Favorite'
-import { useFavorites } from '@/contexts/favorites'
 import type { Breed } from '@/data/dog-breeds'
+import { useFavoritesStore } from '@/stores/favorites'
 
 interface Props {
   breed: Breed
 }
 
-export function ListItem({ breed }: Props) {
-  const { toggleFavorite } = useFavorites()
+function ListItemComponent({ breed }: Props) {
+  const toggleFavorite = useFavoritesStore(
+    state => state.toggleFavorite
+  )
+
+  const handleLongPress = useCallback(
+    () => toggleFavorite(breed.id.toString()),
+    [breed.id.toString(), toggleFavorite]
+  )
+
+  const handlePress = useCallback(() => {
+    router.push({
+      pathname: '/(modal)/breed/[id]',
+      params: {
+        id: breed.id.toString(),
+        breedJSON: JSON.stringify(breed),
+      },
+    })
+  }, [breed.id.toString()])
 
   return (
     <TouchableOpacity
       className="border-b-hairline border-b-gray-300 p-4"
-      onPress={() => {
-        router.push({
-          pathname: '/(modal)/breed/[id]',
-          params: {
-            id: breed.id.toString(),
-            breedJSON: JSON.stringify(breed),
-          },
-        })
-      }}
-      onLongPress={() => toggleFavorite(breed.id.toString())}
+      onPress={handlePress}
+      onLongPress={handleLongPress}
     >
       <View className="flex-row justify-between">
         <View>
@@ -38,3 +48,5 @@ export function ListItem({ breed }: Props) {
     </TouchableOpacity>
   )
 }
+
+export const ListItem = memo(ListItemComponent)

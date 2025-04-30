@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   ActivityIndicator,
   Alert,
@@ -14,8 +14,8 @@ import {
   Footer,
   ListItem,
 } from '@/components/breed-list'
-import { useFavorites } from '@/contexts/favorites'
 import { useDogBreedsInfiniteQuery } from '@/data/dog-breeds'
+import { useFavoritesStore } from '@/stores/favorites'
 import NetInfo from '@react-native-community/netinfo'
 
 export default function HomeScreen() {
@@ -39,11 +39,9 @@ export default function HomeScreen() {
     refetch,
   } = useDogBreedsInfiniteQuery()
 
-  const flatData = data?.pages.flat() ?? []
-
-  const { isFavorite } = useFavorites()
+  const flatData = useMemo(() => data?.pages.flat() ?? [], [data])
+  const isFavorite = useFavoritesStore(state => state.isFavorite)
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false)
-
   const filteredData = showOnlyFavorites
     ? flatData.filter(breed => isFavorite(breed.id.toString()))
     : flatData

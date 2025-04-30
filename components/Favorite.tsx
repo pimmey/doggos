@@ -2,7 +2,7 @@ import { memo } from 'react'
 import { TouchableOpacity } from 'react-native'
 
 import { IconSymbol } from '@/components/ui/IconSymbol'
-import { useFavorites } from '@/contexts/favorites'
+import { useFavoritesStore } from '@/stores/favorites'
 
 interface FavoriteProps {
   id: string
@@ -15,11 +15,13 @@ function FavoriteComponent({
   tappable = false,
   size = 24,
 }: FavoriteProps) {
-  const { isFavorite, toggleFavorite } = useFavorites()
-  const favorited = isFavorite(id)
+  const isFavorite = useFavoritesStore(state => state.isFavorite(id))
+  const toggleFavorite = useFavoritesStore(
+    state => state.toggleFavorite
+  )
 
-  const icon = favorited ? 'heart.fill' : 'heart'
-  const color = favorited ? 'red' : 'lightgray'
+  const icon = isFavorite ? 'heart.fill' : 'heart'
+  const color = isFavorite ? 'red' : 'lightgray'
 
   const iconElement = (
     <IconSymbol name={icon} color={color} size={size} />
