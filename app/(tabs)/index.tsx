@@ -87,6 +87,9 @@ export default function HomeScreen() {
         onEndReachedThreshold={0.5}
         ListFooterComponent={isFetchingNextPage ? <Footer /> : null}
         ListEmptyComponent={<EmptyComponent />}
+        ItemSeparatorComponent={() => (
+          <View className="border-b-hairline border-b-gray-300" />
+        )}
         renderItem={({ item }) => <ListItem breed={item} />}
         refreshing={isFetchingNextPage}
         onRefresh={() => {

@@ -32,7 +32,7 @@ function ListItemComponent({ breed }: Props) {
 
   return (
     <TouchableOpacity
-      className="border-b-hairline border-b-gray-300 p-4"
+      className="p-4"
       onPress={handlePress}
       onLongPress={handleLongPress}
     >
