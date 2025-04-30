@@ -29,8 +29,6 @@ export default function HomeScreen() {
     return () => unsubscribe()
   }, [])
 
-  console.log({ isOffline })
-
   const {
     data,
     isLoading,
