@@ -1,4 +1,3 @@
-// components/Favorite.tsx
 import { memo } from 'react'
 import { TouchableOpacity } from 'react-native'
 
@@ -7,7 +6,7 @@ import { useFavorites } from '@/contexts/favorites'
 
 interface FavoriteProps {
   id: string
-  tappable?: boolean // optional: control whether it's clickable
+  tappable?: boolean
   size?: number
 }
 

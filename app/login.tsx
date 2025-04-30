@@ -1,4 +1,5 @@
 import { router } from 'expo-router'
+import { useState } from 'react'
 import { ActivityIndicator, Button, View } from 'react-native'
 
 import { ThemedText } from '@/components/ThemedText'
@@ -6,12 +7,20 @@ import { useAuth } from '@/contexts/auth'
 import { useAuthentication } from '@/hooks/useAuthentication'
 
 export default function LoginScreen() {
-  const { login, isLoading } = useAuth()
+  const { login } = useAuth()
+  const [isLoading, setIsLoading] = useState(false)
 
   async function handleLogin() {
-    const credentials = await useAuthentication()
-    await login(credentials)
-    router.replace('/(tabs)')
+    try {
+      setIsLoading(true)
+      const credentials = await useAuthentication()
+      await login(credentials)
+      router.replace('/(tabs)')
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -33,8 +42,9 @@ export default function LoginScreen() {
           margin: 32,
         }}
       >
-        {/* TODO: make sure isLoading is changing on login to show indicator */}
-        {isLoading ? <ActivityIndicator /> : null}
+        <View style={{ opacity: isLoading ? 1 : 0 }}>
+          <ActivityIndicator />
+        </View>
         <Button
           title="Login"
           onPress={handleLogin}

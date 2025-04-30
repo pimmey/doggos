@@ -2,7 +2,6 @@ import { router } from 'expo-router'
 import { Text, TouchableOpacity, View } from 'react-native'
 
 import { Favorite } from '@/components/Favorite'
-import { IconSymbol } from '@/components/ui/IconSymbol'
 import { useFavorites } from '@/contexts/favorites'
 import type { Breed } from '@/data/dog-breeds'
 
@@ -11,7 +10,7 @@ interface Props {
 }
 
 export function ListItem({ breed }: Props) {
-  const { toggleFavorite, isFavorite } = useFavorites()
+  const { toggleFavorite } = useFavorites()
 
   return (
     <TouchableOpacity
@@ -35,15 +34,6 @@ export function ListItem({ breed }: Props) {
           </Text>
         </View>
         <Favorite id={breed.id.toString()} />
-        {/*<IconSymbol*/}
-        {/*  name={*/}
-        {/*    isFavorite(breed.id.toString()) ? 'heart.fill' : 'heart'*/}
-        {/*  }*/}
-        {/*  color={*/}
-        {/*    isFavorite(breed.id.toString()) ? 'red' : 'lightgray'*/}
-        {/*  }*/}
-        {/*  size={20}*/}
-        {/*/>*/}
       </View>
     </TouchableOpacity>
   )

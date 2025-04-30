@@ -32,7 +32,7 @@ export default function RootLayout() {
               <Stack.Screen
                 name="(modal)"
                 options={{
-                  presentation: 'modal', // or 'card'
+                  presentation: 'modal',
                   headerShown: false,
                 }}
               />

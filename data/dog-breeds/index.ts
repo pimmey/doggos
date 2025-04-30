@@ -47,6 +47,6 @@ export const useDogBreedsInfiniteQuery = () => {
       }
       return pages.length // Next page number
     },
-    staleTime: 1000 * 60 * 60, // 1 hour — avoid re-fetch on reload
+    staleTime: 1000 * 60 * 60, // 1 hour - avoid re-fetch on reload
   })
 }

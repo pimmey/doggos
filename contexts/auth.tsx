@@ -43,13 +43,23 @@ export function AuthProvider({
   }, [])
 
   const login = async (newUser: User) => {
-    setUser(newUser)
-    await AsyncStorage.setItem(USER_KEY, JSON.stringify(newUser))
+    setIsLoading(true)
+    try {
+      setUser(newUser)
+      await AsyncStorage.setItem(USER_KEY, JSON.stringify(newUser))
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const logout = async () => {
-    setUser(null)
-    await AsyncStorage.removeItem(USER_KEY)
+    setIsLoading(true)
+    try {
+      setUser(null)
+      await AsyncStorage.removeItem(USER_KEY)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (

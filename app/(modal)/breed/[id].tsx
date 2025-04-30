@@ -4,15 +4,12 @@ import { ScrollView, Text, View } from 'react-native'
 
 import { BreedInfoCard } from '@/components/BreedInfoCard'
 import { Favorite } from '@/components/Favorite'
-import { useFavorites } from '@/contexts/favorites'
 import { Breed } from '@/data/dog-breeds'
 
 const IMAGES_BASE_PATH = 'https://cdn2.thedogapi.com/images'
 
 export default function BreedDetailScreen() {
   const { breedJSON } = useLocalSearchParams<{ breedJSON: string }>()
-  const { toggleFavorite } = useFavorites()
-
   const breed: Breed = JSON.parse(breedJSON)
 
   return (

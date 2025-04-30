@@ -1,17 +1,9 @@
-import { BlurView } from 'expo-blur'
 import { Redirect, Tabs } from 'expo-router'
 import React from 'react'
-import {
-  ActivityIndicator,
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 
 import { HapticTab } from '@/components/HapticTab'
 import { IconSymbol } from '@/components/ui/IconSymbol'
-import TabBarBackground from '@/components/ui/TabBarBackground'
 import { Colors } from '@/constants/Colors'
 import { useAuth } from '@/contexts/auth'
 import { useColorScheme } from '@/hooks/useColorScheme'
@@ -40,13 +32,6 @@ export default function TabLayout() {
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: () => <View className="bg-white" />,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            // position: 'absolute',
-          },
-          default: {},
-        }),
       }}
     >
       <Tabs.Screen
