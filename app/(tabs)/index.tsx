@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   ActivityIndicator,
+  Alert,
   Button,
   FlatList,
   SafeAreaView,
@@ -15,8 +16,21 @@ import {
 } from '@/components/breed-list'
 import { useFavorites } from '@/contexts/favorites'
 import { useDogBreedsInfiniteQuery } from '@/data/dog-breeds'
+import NetInfo from '@react-native-community/netinfo'
 
 export default function HomeScreen() {
+  const [isOffline, setIsOffline] = useState(false)
+
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(state => {
+      setIsOffline(!state.isConnected)
+    })
+
+    return () => unsubscribe()
+  }, [])
+
+  console.log({ isOffline })
+
   const {
     data,
     isLoading,
@@ -66,7 +80,7 @@ export default function HomeScreen() {
         keyExtractor={item => item.id.toString()}
         contentContainerStyle={{ flexGrow: 1 }}
         onEndReached={
-          showOnlyFavorites
+          showOnlyFavorites || isOffline
             ? undefined
             : () => {
                 if (hasNextPage && !isFetchingNextPage) {
@@ -79,7 +93,16 @@ export default function HomeScreen() {
         ListEmptyComponent={<EmptyComponent />}
         renderItem={({ item }) => <ListItem breed={item} />}
         refreshing={isFetchingNextPage}
-        onRefresh={() => refetch()}
+        onRefresh={() => {
+          if (isOffline) {
+            Alert.alert(
+              'Offline',
+              'You are offline. Please connect to the internet to refresh.'
+            )
+            return
+          }
+          refetch()
+        }}
       />
     </SafeAreaView>
   )
